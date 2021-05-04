@@ -9,7 +9,9 @@ const SCENE_MENU = 'SCENE_MENU';
 const SCENE_INSTRUCTIONS = 'SCENE_INSTRUCTIONS';
 const SCENE_PLAY = 'SCENE_PLAY';
 
-var scene = new Scene();
+var sceneMain = new Scene();
+var sceneCredits = new SceneCredits();
+
 var previousTimestamp;
 var keyboard = [];
 var interacted;
@@ -33,7 +35,6 @@ function click() {
 }
 
 // Initialization
-
 function init() {
 	for (var i = 0; i < 256; i++)
 		keyboard.push(false);
@@ -48,25 +49,31 @@ function init() {
 
 function frameUpdate(timestamp) {
 	var deltaTime = timestamp - previousTimestamp;
-	if (deltaTime > TIME_PER_FRAME) {
-		scene.update(deltaTime);
-		previousTimestamp = timestamp;
-		drawCurrentScene();
-	}
+	if (deltaTime > TIME_PER_FRAME)
+		drawCurrentScene(deltaTime, timestamp);
+
 	window.requestAnimationFrame(frameUpdate)
 }
 
-function drawCurrentScene() {
-	if (currentScene == SCENE_CREDITS)
-		scene.drawCredits(() => {currentScene = SCENE_MENU});
-	if (currentScene == SCENE_INSTRUCTIONS)
-		scene.drawInstructions();
-	if (currentScene == SCENE_MENU)
-		scene.drawMenu();
-	if (currentScene == SCENE_PLAY)
-		scene.draw();
+function drawCurrentScene(deltaTime, timestamp) {
+	if (currentScene == SCENE_CREDITS) {
+		sceneCredits.update(deltaTime);
+		previousTimestamp = timestamp;
+		sceneCredits.draw(() => { currentScene = SCENE_MENU });
+	} if (currentScene == SCENE_INSTRUCTIONS) {
+		sceneMain.update(deltaTime);
+		previousTimestamp = timestamp;
+		sceneMain.draw();
+	} if (currentScene == SCENE_MENU) {
+		sceneMain.update(deltaTime);
+		previousTimestamp = timestamp;
+		sceneMain.draw();
+	} if (currentScene == SCENE_PLAY) {
+		sceneMain.update(deltaTime);
+		previousTimestamp = timestamp;
+		sceneMain.draw();
+	}
 }
-
 // Init and launch game loop
 init();
 frameUpdate(previousTimestamp);

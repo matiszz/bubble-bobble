@@ -1,4 +1,3 @@
-
 function drawButton(btnX, btnY, btnW, btnH, text) {
 	var canvas = document.getElementById("game-layer");
 	var context = canvas.getContext("2d");

@@ -11,12 +11,12 @@ function SceneCredits() {
 }
 
 
-Scene.prototype.update = function (deltaTime) {
+SceneCredits.prototype.update = function (deltaTime) {
 	// Keep track of time
 	this.currentTime += deltaTime;
 }
 
-Scene.prototype.draw = function (onClick) {
+SceneCredits.prototype.draw = function (onClick) {
 	// Get canvas object, then its context
 	var canvas = document.getElementById("game-layer");
 	var context = canvas.getContext("2d");
@@ -39,6 +39,5 @@ Scene.prototype.draw = function (onClick) {
 	const btnW = 70;
 	const btnH = 30;
 
-	drawButton(btnX, btnY, btnW, btnH, "Back")
-
+	// drawButton(btnX, btnY, btnW, btnH, "Back");
 }
