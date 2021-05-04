@@ -39,5 +39,5 @@ SceneCredits.prototype.draw = function (onClick) {
 	const btnW = 70;
 	const btnH = 30;
 
-	// drawButton(btnX, btnY, btnW, btnH, "Back");
+	drawButton(btnX, btnY, btnW, btnH, "Back", onClick);
 }
