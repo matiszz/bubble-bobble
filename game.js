@@ -11,11 +11,12 @@ const SCENE_PLAY = 'SCENE_PLAY';
 
 var sceneMain = new Scene();
 var sceneCredits = new SceneCredits();
+var sceneMenu = new SceneMenu();
 
 var previousTimestamp;
 var keyboard = [];
 var interacted;
-var currentScene = SCENE_CREDITS;
+var currentScene = SCENE_MENU;
 
 
 // Control keyboard events
@@ -38,6 +39,7 @@ function click() {
 function init() {
 	for (var i = 0; i < 256; i++)
 		keyboard.push(false);
+	
 	document.body.addEventListener('keydown', keyDown);
 	document.body.addEventListener('keyup', keyUp);
 	document.body.addEventListener('click', click);
@@ -46,7 +48,6 @@ function init() {
 }
 
 // Game loop: Update, draw, and request a new frame
-
 function frameUpdate(timestamp) {
 	var deltaTime = timestamp - previousTimestamp;
 	if (deltaTime > TIME_PER_FRAME)
@@ -55,20 +56,33 @@ function frameUpdate(timestamp) {
 	window.requestAnimationFrame(frameUpdate)
 }
 
+function onNavToMenu () {
+	currentScene = SCENE_MENU;
+}
+function onNavToInstructions () {
+	currentScene = SCENE_INSTRUCTIONS;
+}
+function onNavToPlay () {
+	currentScene = SCENE_PLAY;
+}
+function onNavToCredits () {
+	currentScene = SCENE_CREDITS;
+}
+
 function drawCurrentScene(deltaTime, timestamp) {
 	if (currentScene == SCENE_CREDITS) {
 		sceneCredits.update(deltaTime);
 		previousTimestamp = timestamp;
-		sceneCredits.draw(() => { currentScene = SCENE_MENU });
-	} if (currentScene == SCENE_INSTRUCTIONS) {
+		sceneCredits.draw(onNavToMenu);
+	} else if (currentScene == SCENE_MENU) {
+		sceneMenu.update(deltaTime);
+		previousTimestamp = timestamp;
+		sceneMenu.draw(onNavToPlay, onNavToCredits, onNavToInstructions);
+	} else if (currentScene == SCENE_INSTRUCTIONS) {
 		sceneMain.update(deltaTime);
 		previousTimestamp = timestamp;
 		sceneMain.draw();
-	} if (currentScene == SCENE_MENU) {
-		sceneMain.update(deltaTime);
-		previousTimestamp = timestamp;
-		sceneMain.draw();
-	} if (currentScene == SCENE_PLAY) {
+	} else if (currentScene == SCENE_PLAY) {
 		sceneMain.update(deltaTime);
 		previousTimestamp = timestamp;
 		sceneMain.draw();
@@ -77,4 +91,3 @@ function drawCurrentScene(deltaTime, timestamp) {
 // Init and launch game loop
 init();
 frameUpdate(previousTimestamp);
-
