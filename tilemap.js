@@ -40,4 +40,52 @@ Tilemap.prototype.draw = function () {
 		}
 }
 
+// Computes if the left part of a sprite collides with the tilemap.
+// Returns a boolean with the result.
 
+Tilemap.prototype.collisionMoveLeft = function (sprite) {
+	var x = Math.floor((sprite.x - this.basePos[0]) / this.tileSize[0]);
+	var y0 = Math.floor((sprite.y - this.basePos[1]) / this.tileSize[1]);
+	var y1 = Math.floor((sprite.y + sprite.height - 1 - this.basePos[1]) / this.tileSize[1]);
+
+	for (var y = y0; y <= y1; y++) {
+		if (this.map.layers[0].data[y * sprite.width + x] != 0)
+			return true;
+	}
+
+	return false;
+}
+
+// Computes if the right part of a sprite collides with the tilemap.
+// Returns a boolean with the result.
+
+Tilemap.prototype.collisionMoveRight = function (sprite) {
+	var x = Math.floor((sprite.x + sprite.width - 1 - this.basePos[0]) / this.tileSize[0]);
+	var y0 = Math.floor((sprite.y - this.basePos[1]) / this.tileSize[1]);
+	var y1 = Math.floor((sprite.y + sprite.height - 1 - this.basePos[1]) / this.tileSize[1]);
+
+	for (var y = y0; y <= y1; y++) {
+		if (this.map.layers[0].data[y * sprite.width + x] != 0)
+			return true;
+	}
+
+	return false;
+}
+
+// Computes if the bottom of a sprite collides with the tilemap.
+// Returns a boolean with the result, and if it collides, it changes its Y position so as to avoid it.
+
+Tilemap.prototype.collisionMoveDown = function (sprite) {
+	var y = Math.floor((sprite.y + sprite.height - 1 - this.basePos[1]) / this.tileSize[1]);
+	var x0 = Math.floor((sprite.x - this.basePos[0]) / this.tileSize[0]);
+	var x1 = Math.floor((sprite.x + sprite.width - 1 - this.basePos[0]) / this.tileSize[0]);
+
+	for (var x = x0; x <= x1; x++) {
+		if (this.map.layers[0].data[y * sprite.width + x] != 0) {
+			sprite.y = y * this.tileSize[1] - sprite.height + this.basePos[1];
+			return true;
+		}
+	}
+
+	return false;
+}

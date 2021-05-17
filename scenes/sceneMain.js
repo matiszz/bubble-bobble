@@ -7,8 +7,12 @@ function Scene() {
 	var tilesheet = new Texture("imgs/tiles.png");
 
 	// Create tilemap		
-	this.map = new Tilemap(tilesheet, [16, 16], [2, 2], [0, 32], level05);
+	this.map = new Tilemap(tilesheet, [16, 16], [2, 2], [0, 32], level01);
 
+	this.player = new Player(224, 240, this.map);
+	this.bubble = new Bubble(360, 112);
+	this.bubbleActive = true;
+	
 	// Store current time
 	this.currentTime = 0
 }
@@ -17,6 +21,13 @@ function Scene() {
 Scene.prototype.update = function (deltaTime) {
 	// Keep track of time
 	this.currentTime += deltaTime;
+
+	this.player.update(deltaTime);
+	this.bubble.update(deltaTime);
+	
+	// Check for collision between entities
+	if(this.player.collisionBox().intersect(this.bubble.collisionBox()))
+		this.bubbleActive = false;
 }
 
 Scene.prototype.draw = function () {
@@ -30,4 +41,9 @@ Scene.prototype.draw = function () {
 
 	// Draw tilemap
 	this.map.draw();
+
+
+	if(this.bubbleActive)
+		this.bubble.draw();
+	this.player.draw();
 }
