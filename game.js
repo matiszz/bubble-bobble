@@ -16,7 +16,7 @@ var sceneMenu = new SceneMenu();
 var previousTimestamp;
 var keyboard = [];
 var interacted;
-var currentScene = SCENE_MENU;
+var currentScene = SCENE_PLAY;
 
 
 // Control keyboard events
