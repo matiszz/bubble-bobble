@@ -90,26 +90,22 @@ Bubble.prototype.collisionBox = function () {
 }
 
 Bubble.prototype.moveLeft = function (speed) {
-	console.log('Moving Left')
 	this.sprite.x -= speed;
 	if (this.map.collisionMoveLeft(this.sprite))
 		this.sprite.x += speed;
 }
 
 Bubble.prototype.moveRight = function (speed) {
-	console.log('Moving Right')
 	this.sprite.x += speed;
 	if (this.map.collisionMoveRight(this.sprite))
 		this.sprite.x -= speed;
 }
 
 Bubble.prototype.moveUp = function (speed) {
-	console.log('Movi Upng')
 	this.sprite.y -= speed;
 }
 
 Bubble.prototype.moveDown = function (speed) {
-	console.log('Moving Down')
 	this.sprite.y += speed;
 	if (this.map.collisionMoveDown(this.sprite))
 		this.sprite.y -= speed;
