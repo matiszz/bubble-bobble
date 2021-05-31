@@ -1,4 +1,4 @@
-
+const BUBBLE_CREATION_TIME = 300;
 
 // Scene. Updates and draws a single scene of the game.
 
@@ -10,11 +10,12 @@ function Scene() {
 	this.map = new Tilemap(tilesheet, [16, 16], [2, 2], [0, 32], level01);
 
 	this.player = new Player(224, 240, this.map);
-	this.bubble = new Bubble(360, 112);
-	this.bubbleActive = true;
+
+	this.bubbles = [];
+	this.lastBubbleCreatedTime = 0;
 	
 	// Store current time
-	this.currentTime = 0
+	this.currentTime = 0;
 }
 
 
@@ -23,11 +24,21 @@ Scene.prototype.update = function (deltaTime) {
 	this.currentTime += deltaTime;
 
 	this.player.update(deltaTime);
-	this.bubble.update(deltaTime);
-	
-	// Check for collision between entities
-	if(this.player.collisionBox().intersect(this.bubble.collisionBox()))
-		this.bubbleActive = false;
+
+	// SPACE
+	if (keyboard[32] && this.didEnoughTimePassed()) {
+		this.lastBubbleCreatedTime = this.currentTime;
+		this.bubbles.push(new Bubble(this.player.sprite.x, this.player.sprite.y, this.shotDirection(), this.map));
+	}
+
+	for (bubble of this.bubbles) {
+		bubble.update(deltaTime);
+
+		// Check for collision between entities
+		if(this.player.collisionBox().intersect(bubble.collisionBox()) && this.didEnoughTimePassed()) {
+			this.bubbles = this.bubbles.filter(el => el != bubble);
+		}
+	}
 }
 
 Scene.prototype.draw = function () {
@@ -42,8 +53,19 @@ Scene.prototype.draw = function () {
 	// Draw tilemap
 	this.map.draw();
 
+	for (bubble of this.bubbles) 
+		bubble.draw();
 
-	if(this.bubbleActive)
-		this.bubble.draw();
 	this.player.draw();
+}
+
+Scene.prototype.didEnoughTimePassed = function() {
+	return this.currentTime - this.lastBubbleCreatedTime > BUBBLE_CREATION_TIME;
+}
+
+Scene.prototype.shotDirection = function() {
+	const animation = this.player.sprite.currentAnimation;
+	if (animation == 0 || animation == 2 || animation == 5)
+		return 0;
+	return 1;
 }
