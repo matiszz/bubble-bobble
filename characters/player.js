@@ -7,7 +7,7 @@ const BUB_SHOOT_LEFT = 5;
 const BUB_DYING = 6;
 
 const FIRE_TIME = 100;
-const PLAYER_SPEED = 3;
+const PLAYER_SPEED = 4;
 
 function Player(x, y, map) {
   // Loading spritesheets
@@ -139,7 +139,7 @@ Player.prototype.update = function (deltaTime) {
     }
 
     if (this.bJumping) {
-      this.jumpAngle += 4;
+      this.jumpAngle += 5;
       if (this.jumpAngle === 180) {
         this.bJumping = false;
         this.sprite.y = this.startY;
