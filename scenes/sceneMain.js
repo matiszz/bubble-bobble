@@ -4,12 +4,13 @@ const BUBBLE_CREATION_TIME = 300;
 
 function Scene() {
 	// Loading texture to use in a TileMap
-	var tilesheet = new Texture("imgs/tiles.png");
+	const tilesheet = new Texture("imgs/tiles.png");
 
 	// Create tilemap		
 	this.map = new Tilemap(tilesheet, [16, 16], [2, 2], [0, 32], level01);
 
 	this.player = new Player(224, 240, this.map);
+	this.enemies = [new Enemy(264, 240, this.map)];
 
 	this.bubbles = [];
 	this.lastBubbleCreatedTime = 0;
@@ -31,20 +32,28 @@ Scene.prototype.update = function (deltaTime) {
 		this.bubbles.push(new Bubble(this.player.sprite.x, this.player.sprite.y, this.shotDirection(), this.map));
 	}
 
-	for (bubble of this.bubbles) {
+	for (let bubble of this.bubbles) {
 		bubble.update(deltaTime);
 
 		// Check for collision between entities
-		if(this.player.collisionBox().intersect(bubble.collisionBox()) && this.didEnoughTimePassed()) {
-			this.bubbles = this.bubbles.filter(el => el != bubble);
+		if (this.player.collisionBox().intersect(bubble.collisionBox()) && this.didEnoughTimePassed()) {
+			this.bubbles = this.bubbles.filter(el => el !== bubble);
 		}
+	}
+
+	for (let enemy of this.enemies) {
+		enemy.update(deltaTime);
+
+		// Check for collision with enemy
+		if (this.player.collisionBox().intersect(enemy.collisionBox()))
+			this.player.die();
 	}
 }
 
 Scene.prototype.draw = function () {
 	// Get canvas object, then its context
-	var canvas = document.getElementById("game-layer");
-	var context = canvas.getContext("2d");
+	const canvas = document.getElementById("game-layer");
+	const context = canvas.getContext("2d");
 
 	// Clear background
 	context.fillStyle = "#334433";
@@ -53,8 +62,10 @@ Scene.prototype.draw = function () {
 	// Draw tilemap
 	this.map.draw();
 
-	for (bubble of this.bubbles) 
+	for (let bubble of this.bubbles)
 		bubble.draw();
+	for (let enemy of this.enemies)
+		enemy.draw();
 
 	this.player.draw();
 }
@@ -65,7 +76,7 @@ Scene.prototype.didEnoughTimePassed = function() {
 
 Scene.prototype.shotDirection = function() {
 	const animation = this.player.sprite.currentAnimation;
-	if (animation == 0 || animation == 2 || animation == 5)
+	if (animation === 0 || animation === 2 || animation === 5)
 		return 0;
 	return 1;
 }

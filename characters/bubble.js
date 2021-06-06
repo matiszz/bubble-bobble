@@ -19,7 +19,7 @@ const IMPULSE_SPEED = 10;
 const FLOATING_SPEED = 1;
 
 function Bubble(x, y, direction, map) {
-	var bubble = new Texture("imgs/bubble.png");
+	const bubble = new Texture("imgs/bubble.png");
 
 	// Prepare bubble sprite & its animation
 	this.sprite = new Sprite(x, y, 32, 32, 3, bubble);
@@ -56,20 +56,20 @@ Bubble.prototype.update = function update(deltaTime) {
 	if (this.timestamp >= IMPULSE_TIME)
 		this.status = STATUS_FLOATING;
 
-	if (this.status == STATUS_IMPULSE) {
-		if (this.impulseDirection == DIRECTION_RIGHT)
+	if (this.status === STATUS_IMPULSE) {
+		if (this.impulseDirection === DIRECTION_RIGHT)
 			this.moveRight(IMPULSE_SPEED)
-		else if (this.impulseDirection == DIRECTION_LEFT) 
+		else if (this.impulseDirection === DIRECTION_LEFT)
 			this.moveLeft(IMPULSE_SPEED)
 		
-	} else if (this.status == STATUS_FLOATING) {
-		if (this.floatingDirection == FLOATING_UP)
+	} else if (this.status === STATUS_FLOATING) {
+		if (this.floatingDirection === FLOATING_UP)
 			this.moveUp(FLOATING_SPEED)
-		else if (this.floatingDirection == FLOATING_DOWN)
+		else if (this.floatingDirection === FLOATING_DOWN)
 			this.moveDown(FLOATING_SPEED)
-		else if (this.floatingDirection == FLOATING_LEFT)
+		else if (this.floatingDirection === FLOATING_LEFT)
 			this.moveLeft(FLOATING_SPEED)
-		else if (this.floatingDirection == FLOATING_RIGHT)
+		else if (this.floatingDirection === FLOATING_RIGHT)
 			this.moveRight(FLOATING_SPEED)
 
 		if (this.timestamp - this.lastFloatingChange > FLOATING_TIME) {
@@ -84,9 +84,7 @@ Bubble.prototype.draw = function draw() {
 }
 
 Bubble.prototype.collisionBox = function () {
-	var box = new Box(this.sprite.x + 2, this.sprite.y + 2, this.sprite.x + this.sprite.width - 4, this.sprite.y + this.sprite.height - 4);
-
-	return box;
+	return new Box(this.sprite.x + 2, this.sprite.y + 2, this.sprite.x + this.sprite.width - 4, this.sprite.y + this.sprite.height - 4);
 }
 
 Bubble.prototype.moveLeft = function (speed) {
