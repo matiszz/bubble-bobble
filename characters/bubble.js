@@ -1,6 +1,7 @@
 
 const BUBBLE_EMPTY = 0;
-const BUBBLE_FULL = 1;
+const BUBBLE_FULL_INVADER = 1;
+const BUBBLE_FULL_ENEMY = 2;
 
 const DIRECTION_LEFT = 0;
 const DIRECTION_RIGHT = 1;
@@ -18,6 +19,8 @@ const FLOATING_TIME = 1000;
 const IMPULSE_SPEED = 10;
 const FLOATING_SPEED = 1;
 
+const CAPTURE_TIME = 4000;
+
 function Bubble(x, y, direction, map) {
 	const bubble = new Texture("imgs/bubble.png");
 
@@ -31,10 +34,16 @@ function Bubble(x, y, direction, map) {
 	this.sprite.addKeyframe(BUBBLE_EMPTY, [48, 16, 16, 16]);
 
 	this.sprite.addAnimation();
-	this.sprite.addKeyframe(BUBBLE_FULL, [0, 0, 16, 16]);
-	this.sprite.addKeyframe(BUBBLE_FULL, [16, 0, 16, 16]);
-	this.sprite.addKeyframe(BUBBLE_FULL, [32, 0, 16, 16]);
-	this.sprite.addKeyframe(BUBBLE_FULL, [48, 0, 16, 16]);
+	this.sprite.addKeyframe(BUBBLE_FULL_INVADER, [0, 0, 16, 16]);
+	this.sprite.addKeyframe(BUBBLE_FULL_INVADER, [16, 0, 16, 16]);
+	this.sprite.addKeyframe(BUBBLE_FULL_INVADER, [32, 0, 16, 16]);
+	this.sprite.addKeyframe(BUBBLE_FULL_INVADER, [48, 0, 16, 16]);
+
+	this.sprite.addAnimation();
+	this.sprite.addKeyframe(BUBBLE_FULL_ENEMY, [0, 32, 16, 16]);
+	this.sprite.addKeyframe(BUBBLE_FULL_ENEMY, [16, 32, 16, 16]);
+	this.sprite.addKeyframe(BUBBLE_FULL_ENEMY, [32, 32, 16, 16]);
+	this.sprite.addKeyframe(BUBBLE_FULL_ENEMY, [48, 32, 16, 16]);
 
 	this.sprite.setAnimation(BUBBLE_EMPTY);
 
@@ -45,6 +54,9 @@ function Bubble(x, y, direction, map) {
 
 	this.lastFloatingChange = 0;
 
+	// For capture
+	this.hasEnemyCaptured = false;
+
 	this.map = map;
 }
 
@@ -52,6 +64,9 @@ function Bubble(x, y, direction, map) {
 Bubble.prototype.update = function update(deltaTime) {
 	this.sprite.update(deltaTime);
 	this.timestamp += deltaTime;
+
+	if (this.timestamp - this.capturedAt >= CAPTURE_TIME && this.hasEnemyCaptured)
+		this.releaseEnemy();
 
 	if (this.timestamp >= IMPULSE_TIME)
 		this.status = STATUS_FLOATING;
@@ -109,4 +124,18 @@ Bubble.prototype.moveDown = function (speed) {
 		this.sprite.y -= speed;
 }
 
+Bubble.prototype.captureEnemy = function (type, enemy) {
+	this.onReleaseEnemy = enemy.releaseBubble;
+	this.capturedAt = this.timestamp;
+	this.hasEnemyCaptured = true;
 
+	if (type === 'INVADER')
+		this.sprite.setAnimation(BUBBLE_FULL_INVADER)
+	else
+		this.sprite.setAnimation(BUBBLE_FULL_ENEMY)
+}
+
+Bubble.prototype.releaseEnemy = function () {
+	this.hasEnemyCaptured = false;
+	this.onReleaseEnemy(this.sprite.x, this.sprite.y);
+}

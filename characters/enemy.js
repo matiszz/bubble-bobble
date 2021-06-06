@@ -13,6 +13,7 @@ function Enemy(x, y, map, type) {
   // Prepare Bub sprite & its animations
   this.sprite = new Sprite(x, y, 32, 32, 7, invader);
 
+  this.type = type;
   if (type === 'INVADER') {
     this.sprite.addAnimation();
     this.sprite.addKeyframe(ENEMY_LEFT, [0, 0, 16, 16]);
@@ -48,35 +49,41 @@ function Enemy(x, y, map, type) {
   else
     this.sprite.setAnimation(ENEMY_RIGHT)
 
+  // Attribute to get captured
+  this.isCaptured = false;
+
   // Timestamp
   this.timestamp = 0;
 }
 
 Enemy.prototype.update = function (deltaTime) {
-  if (this.direction === ENEMY_DIRECTION_RIGHT)
-    this.moveRight(this.speed)
-  else if (this.direction === ENEMY_DIRECTION_LEFT)
-    this.moveLeft(this.speed)
 
-  if (this.bJumping) {
-    this.jumpAngle += 3;
-    if (this.jumpAngle === 180) {
-      this.bJumping = false;
-      this.sprite.y = this.startY;
+  if (!this.isCaptured) {
+    if (this.direction === ENEMY_DIRECTION_RIGHT)
+      this.moveRight(this.speed)
+    else if (this.direction === ENEMY_DIRECTION_LEFT)
+      this.moveLeft(this.speed)
+
+    if (this.bJumping) {
+      this.jumpAngle += 3;
+      if (this.jumpAngle === 180) {
+        this.bJumping = false;
+        this.sprite.y = this.startY;
+      } else {
+        this.sprite.y = this.startY - 96 * Math.sin(3.14159 * this.jumpAngle / 180);
+        if (this.jumpAngle > 90)
+          this.bJumping = !this.map.collisionMoveDown(this.sprite);
+      }
     } else {
-      this.sprite.y = this.startY - 96 * Math.sin(3.14159 * this.jumpAngle / 180);
-      if (this.jumpAngle > 90)
-        this.bJumping = !this.map.collisionMoveDown(this.sprite);
-    }
-  } else {
-    // Move Bub so that it is affected by gravity
-    this.sprite.y += this.speed;
-    if (this.map.collisionMoveDown(this.sprite)) {
-      // Check arrow up key. If pressed, jump.
-      if (this.isAllowedToJump()) {
-        this.bJumping = true;
-        this.jumpAngle = 0;
-        this.startY = this.sprite.y;
+      // Move Bub so that it is affected by gravity
+      this.sprite.y += this.speed;
+      if (this.map.collisionMoveDown(this.sprite)) {
+        // Check arrow up key. If pressed, jump.
+        if (this.isAllowedToJump()) {
+          this.bJumping = true;
+          this.jumpAngle = 0;
+          this.startY = this.sprite.y;
+        }
       }
     }
   }
@@ -87,7 +94,10 @@ Enemy.prototype.update = function (deltaTime) {
 }
 
 Enemy.prototype.draw = function () {
-  this.sprite.draw();
+  console.log('trying drawing', this.isCaptured)
+
+  if (!this.isCaptured)
+    this.sprite.draw();
 }
 
 Enemy.prototype.collisionBox = function () {
@@ -112,4 +122,24 @@ Enemy.prototype.moveRight = function (speed) {
 
 Enemy.prototype.isAllowedToJump = function () {
   return (this.sprite.y > this.jumpingThreshold) && (this.timestamp - this.lastJumpedAt > TIME_BETWEEN_ENEMY_JUMPS + random(-500, 1000))
+}
+
+Enemy.prototype.getType = function () {
+  return this.type;
+}
+
+Enemy.prototype.capture = function () {
+  this.isCaptured = true;
+}
+
+// TODO: ASK PROFESSOR!
+Enemy.prototype.releaseBubble = function (x, y) {
+  console.log('RELEASING at ', x, y)
+  this.isCaptured = false;
+  console.log('this.isCaptured ', this.isCaptured)
+
+  this.sprite.x = x;
+  this.sprite.y = y;
+
+  return 0;
 }

@@ -46,8 +46,16 @@ Scene.prototype.update = function (deltaTime) {
 		enemy.update(deltaTime);
 
 		// Check for collision with enemy
-		if (this.player.collisionBox().intersect(enemy.collisionBox()))
+		if (this.player.collisionBox().intersect(enemy.collisionBox()) && !enemy.isCaptured)
 			this.player.die();
+
+		// Check collisions enemies and bubbles
+		for (let bubble of this.bubbles) {
+			if (enemy.collisionBox().intersect(bubble.collisionBox()) && !enemy.isCaptured) {
+				bubble.captureEnemy(enemy.getType(), enemy);
+				enemy.capture();
+			}
+		}
 	}
 }
 
