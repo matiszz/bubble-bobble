@@ -75,7 +75,6 @@ Player.prototype.update = function (deltaTime) {
 
     if (sinus < -0.9 || this.jumpAngle > 230) { // Fall
       this.sprite.setAnimation(BUB_STAND_RIGHT)
-      console.log('Jumping Angle: ', this.jumpAngle)
       this.sprite.y = this.startY + 96 + (this.jumpAngle-230) * 0.7;
 
       if (this.sprite.y > 448)
@@ -83,7 +82,6 @@ Player.prototype.update = function (deltaTime) {
     } else { // Jump
       this.sprite.y = this.startY - 96 * sinus;
     }
-    console.log('Y: ', this.sprite.y)
 
   } else {
     if (this.bShooting && this.timestamp - this.shootingSince >= FIRE_TIME) {

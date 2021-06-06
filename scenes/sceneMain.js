@@ -10,7 +10,7 @@ function Scene() {
 	this.map = new Tilemap(tilesheet, [16, 16], [2, 2], [0, 32], level01);
 
 	this.player = new Player(224, 240, this.map);
-	this.enemies = [new Enemy(264, 240, this.map)];
+	this.enemies = [new Enemy(264, 240, this.map, 'INVADER')];
 
 	this.bubbles = [];
 	this.lastBubbleCreatedTime = 0;

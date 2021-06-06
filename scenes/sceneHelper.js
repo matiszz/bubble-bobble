@@ -35,3 +35,10 @@ function getMousePos(canvas, event) {
 function isInside(pos, rect) {
 	return pos.x > rect.x && pos.x < rect.x + rect.width && pos.y < rect.y + rect.heigth && pos.y > rect.y
 }
+
+function random(min, max) {
+	return Math.floor(Math.random() * (max+1)) + min;
+}
+function randomFloat(min, max) {
+	return Math.random() * (max+1) + min;
+}
