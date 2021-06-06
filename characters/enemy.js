@@ -94,8 +94,6 @@ Enemy.prototype.update = function (deltaTime) {
 }
 
 Enemy.prototype.draw = function () {
-  console.log('trying drawing', this.isCaptured)
-
   if (!this.isCaptured)
     this.sprite.draw();
 }
@@ -134,10 +132,8 @@ Enemy.prototype.capture = function () {
 
 // TODO: ASK PROFESSOR!
 Enemy.prototype.releaseBubble = function (x, y) {
-  console.log('RELEASING at ', x, y)
+  // console.log('RELEASING at ', x, y)
   this.isCaptured = false;
-  console.log('this.isCaptured ', this.isCaptured)
-
   this.sprite.x = x;
   this.sprite.y = y;
 
