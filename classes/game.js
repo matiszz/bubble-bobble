@@ -9,7 +9,7 @@ const SCENE_MENU = 'SCENE_MENU';
 const SCENE_INSTRUCTIONS = 'SCENE_INSTRUCTIONS';
 const SCENE_PLAY = 'SCENE_PLAY';
 
-const sceneMain = new Scene();
+const sceneMain = new Scene(level05);
 const sceneCredits = new SceneCredits();
 const sceneMenu = new SceneMenu();
 
@@ -37,7 +37,7 @@ function click() {
 
 // Initialization
 function init() {
-	for (var i = 0; i < 256; i++)
+	for (let i = 0; i < 256; i++)
 		keyboard.push(false);
 	
 	document.body.addEventListener('keydown', keyDown);
