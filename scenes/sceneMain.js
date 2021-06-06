@@ -21,7 +21,6 @@ function Scene(level) {
 
 }
 
-
 Scene.prototype.update = function (deltaTime) {
 	// Keep track of time
 	this.currentTime += deltaTime;
@@ -56,10 +55,6 @@ Scene.prototype.draw = function () {
 	// Get canvas object, then its context
 	const canvas = document.getElementById("game-layer");
 	const context = canvas.getContext("2d");
-
-	canvas.addEventListener('click', (evt) => {
-		console.log(getMousePos(canvas, evt));
-	});
 
 	// Clear background
 	context.fillStyle = "#334433";
