@@ -11,7 +11,7 @@ function Enemy(x, y, map, type) {
   const invader = new Texture("imgs/invader.png");
 
   // Prepare Bub sprite & its animations
-  this.sprite = new Sprite(x, y, 32, 32, 7, invader);
+  this.sprite = new Sprite(x, y, 32, 32, 4, invader);
 
   this.type = type;
   if (type === 'INVADER') {
