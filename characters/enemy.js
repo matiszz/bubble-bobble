@@ -130,9 +130,7 @@ Enemy.prototype.capture = function () {
   this.isCaptured = true;
 }
 
-// TODO: ASK PROFESSOR!
 Enemy.prototype.releaseBubble = function (x, y) {
-  console.log('RELEASING at ', x, y)
   this.isCaptured = false;
   this.sprite.x = x;
   this.sprite.y = y;

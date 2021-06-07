@@ -223,7 +223,6 @@ Scene.prototype.updateEnemies = function (deltaTime) {
     // Check collisions enemies and bubbles
     for (let bubble of this.bubbles) {
       if (enemy.collisionBox().intersect(bubble.collisionBox()) && !enemy.isCaptured && !bubble.hasEnemyCaptured && !bubble.exploded && bubble.explodedAt === 0) {
-        console.log('Capturing enemy')
         bubble.captureEnemy(enemy.getType(), enemy);
         enemy.capture();
       }

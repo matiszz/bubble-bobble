@@ -152,8 +152,6 @@ Bubble.prototype.releaseEnemy = function () {
 }
 
 Bubble.prototype.explode = function () {
-
-	console.log('Exploding')
 	this.explodedAt = this.timestamp;
 	this.sprite.setAnimation(BUBBLE_EXPLODED)
 }
