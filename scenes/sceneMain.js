@@ -9,6 +9,7 @@ const BONUS_TIME = 5000;
 
 function Scene(onGameOver) {
   this.levelSound = AudioFX('sounds/level_up.mp3');
+  this.currentLevelNumber = 1;
 
   this.setLevel(level01)
 
@@ -19,7 +20,6 @@ function Scene(onGameOver) {
   this.allEnemiesKilledAt = 0;
 
   // Level
-  this.currentLevel = 1;
   this.onGameOver = onGameOver;
 
   // Master mode
@@ -93,15 +93,16 @@ Scene.prototype.shotDirection = function () {
 }
 
 Scene.prototype.createEnemies = function () {
-  switch (this.currentLevel) {
-    case level01:
+  console.log(this.currentLevelNumber)
+  switch (this.currentLevelNumber) {
+    case 1:
       return [
         new Enemy(150, 153, this.map, 'INVADER'),
         new Enemy(370, 153, this.map, 'INVADER'),
         new Enemy(370, 330, this.map, 'MONSTER'),
         new Enemy(150, 330, this.map, 'MONSTER')
       ]
-    case level02:
+    case 2:
       return [
         new Enemy(443, 100, this.map, 'MONSTER'),
         new Enemy(70, 100, this.map, 'MONSTER'),
@@ -109,7 +110,7 @@ Scene.prototype.createEnemies = function () {
         new Enemy(255, 185, this.map, 'INVADER'),
         new Enemy(443, 400, this.map, 'MONSTER'),
       ]
-    case level03:
+    case 3:
       return [
         new Enemy(443, 100, this.map, 'MONSTER'),
         new Enemy(70, 100, this.map, 'MONSTER'),
@@ -118,17 +119,17 @@ Scene.prototype.createEnemies = function () {
         new Enemy(400, 330, this.map, 'MONSTER'),
         new Enemy(100, 330, this.map, 'MONSTER'),
       ]
-    case level04:
+    case 4:
       return [
         new Enemy(450, 105, this.map, 'MONSTER'),
         new Enemy(50, 105, this.map, 'MONSTER'),
         new Enemy(450, 360, this.map, 'INVADER'),
         new Enemy(50, 360, this.map, 'INVADER'),
-        new Enemy(450, 420, this.map, 'INVADER'),
-        new Enemy(50, 420, this.map, 'INVADER'),
+        new Enemy(450, 410, this.map, 'INVADER'),
+        new Enemy(50, 410, this.map, 'INVADER'),
         new Enemy(250, 410, this.map, 'MONSTER'),
       ]
-    case level05:
+    case 5:
       return [
         new Enemy(450, 165, this.map, 'INVADER'),
         new Enemy(50, 165, this.map, 'INVADER'),
@@ -243,8 +244,8 @@ Scene.prototype.updateEnemies = function (deltaTime) {
 
 Scene.prototype.updateLevel = function () {
   if (this.enemies.length === 0 && this.currentTime - this.allEnemiesKilledAt > BONUS_TIME) {
-    this.currentLevel++;
-    this.setLevel(getLevel(this.currentLevel))
+    this.currentLevelNumber += 1;
+    this.setLevel(getLevel(this.currentLevelNumber))
     this.levelSound.play();
   }
 }
@@ -252,7 +253,6 @@ Scene.prototype.updateLevel = function () {
 Scene.prototype.setLevel = function (level) {
   // Loading texture to use in a TileMap
   const tilesheet = new Texture("imgs/tiles.png");
-  this.currentLevel = level;
 
   // Create tilemap
   this.map = new Tilemap(tilesheet, [16, 16], [2, 2], [0, 32], level);
@@ -278,14 +278,20 @@ Scene.prototype.setLevel = function (level) {
 Scene.prototype.masterController = function () {
   if (keyboard[71]) // G key pressed
     this.masterModeActivated = true;
-  else if (keyboard[49] && this.masterModeActivated) // Key 1 pressed
+  else if (keyboard[49] && this.masterModeActivated) { // Key 1 pressed
+    this.currentLevelNumber = 1;
     this.setLevel(getLevel(1));
-  else if (keyboard[50] && this.masterModeActivated) // Key 2 pressed
+  } else if (keyboard[50] && this.masterModeActivated) { // Key 2 pressed
+    this.currentLevelNumber = 2;
     this.setLevel(getLevel(2));
-  else if (keyboard[51] && this.masterModeActivated) // Key 3 pressed
+  } else if (keyboard[51] && this.masterModeActivated) { // Key 3 pressed
+    this.currentLevelNumber = 3;
     this.setLevel(getLevel(3));
-  else if (keyboard[52] && this.masterModeActivated) // Key 4 pressed
+  } else if (keyboard[52] && this.masterModeActivated) { // Key 4 pressed
+    this.currentLevelNumber = 4;
     this.setLevel(getLevel(4));
-  else if (keyboard[53] && this.masterModeActivated) // Key 5 pressed
+  } else if (keyboard[53] && this.masterModeActivated) { // Key 5 pressed
+    this.currentLevelNumber = 5;
     this.setLevel(getLevel(5));
+  }
 }
