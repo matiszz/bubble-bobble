@@ -1,5 +1,5 @@
 const BUBBLE_CREATION_TIME = 300;
-const POINT_CREATION_TIME = 500;
+const POINT_CREATION_TIME = 800;
 
 // Scene. Updates and draws a single scene of the game.
 
@@ -49,8 +49,10 @@ Scene.prototype.update = function (deltaTime) {
 
     // Check for collision between entities
     if (this.player.collisionBox().intersect(bubble.collisionBox()) && this.didEnoughTimePassedBubble()) {
-      if (bubble.hasEnemyCaptured)
+      if (bubble.hasEnemyCaptured) {
         this.points.push(new Point(bubble.sprite.x, bubble.sprite.y, this.map))
+        this.lastPointCreatedTime = this.currentTime;
+      }
 
       this.bubbles = this.bubbles.filter(el => el !== bubble);
     }
