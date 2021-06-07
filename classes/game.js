@@ -25,12 +25,10 @@ function keyDown(keycode) {
 	if (keycode.which >= 0 && keycode.which < 256)
 		keyboard[keycode.which] = true;
 }
-
 function keyUp(keycode) {
 	if (keycode.which >= 0 && keycode.which < 256)
 		keyboard[keycode.which] = false;
 }
-
 function click() {
 	interacted = true;
 }
@@ -56,6 +54,7 @@ function frameUpdate(timestamp) {
 	window.requestAnimationFrame(frameUpdate)
 }
 
+// Navigations
 function onNavToMenu () {
 	currentScene = SCENE_MENU;
 }
