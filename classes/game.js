@@ -16,7 +16,7 @@ const sceneMenu = new SceneMenu();
 let previousTimestamp;
 let keyboard = [];
 let interacted;
-let currentScene = SCENE_PLAY;
+let currentScene = SCENE_CREDITS;
 
 
 // Control keyboard events

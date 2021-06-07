@@ -1,5 +1,3 @@
-
-
 // Scene. Updates and draws a single scene of the game.
 
 function SceneMenu() {
@@ -15,22 +13,35 @@ SceneMenu.prototype.update = function (deltaTime) {
 
 SceneMenu.prototype.draw = function (onClickPlay, onClickCredits, onClickInstructions) {
 	// Get canvas object, then its context
-	var canvas = document.getElementById("game-layer");
-	var context = canvas.getContext("2d");
+	const canvas = document.getElementById("game-layer");
+	const context = canvas.getContext("2d");
 
 	// Clear background
 	context.fillStyle = "#334433";
 	context.fillRect(0, 0, canvas.width, canvas.height);
 
+	const title = new Texture("imgs/BubbleBobble.png");
+	context.drawImage(title.img, 160, 70);
+
 	// Draw Text
-	context.font = "34px mono";
+	const highScore = localStorage.getItem('highScore') ? localStorage.getItem('highScore') : 0
+	context.font = "20px ArcadeClassic";
+	context.fillStyle = "#c90000";
+	context.fillText("High Score", 200, 25);
 	context.fillStyle = "White";
-	context.fillText("Bubble Bobble", 155, 100);
+	context.fillText(highScore, 225, 40);
 
-	context.font = "24px mono";
-	context.fillText("Main Menu", 200, 140);
+	if (Math.floor(this.currentTime / 1000) % 2 === 0) {
+		context.font = "34px ArcadeClassic";
+		context.fillStyle = "White";
+		context.fillText("Insert  coin  to  play", 90, 290);
+	}
 
-	drawButton(200, 200, 110, 30, "Play", onClickPlay);
-	drawButton(200, 250, 110, 30, "Credits", onClickCredits);
-	drawButton(200, 300, 110, 30, "Instructions", onClickInstructions);
+	context.font = "24px ArcadeClassic";
+	context.fillStyle = "White";
+	context.fillText("Made  by  Matias  Szarfer", 120, 315);
+
+	drawButton(50, 350, 110, 30, "Play", onClickPlay);
+	drawButton(195, 350, 110, 30, "Credits", onClickCredits);
+	drawButton(340, 350, 110, 30, "Instructions", onClickInstructions);
 }

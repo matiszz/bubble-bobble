@@ -1,8 +1,8 @@
 function drawButton(btnX, btnY, btnW, btnH, text, onClick) {
-	var canvas = document.getElementById("game-layer");
-	var context = canvas.getContext("2d");
+	const canvas = document.getElementById("game-layer");
+	const context = canvas.getContext("2d");
 
-	const rectangle = { x: btnX, y: btnY, width: btnW, heigth: btnH };
+	const rectangle = { x: btnX, y: btnY, width: btnW, height: btnH };
 
 	canvas.addEventListener('click', (evt) => {
 		const mousePos = getMousePos(canvas, evt);
@@ -12,16 +12,17 @@ function drawButton(btnX, btnY, btnW, btnH, text, onClick) {
 	context.beginPath();
 
 	context.rect(btnX, btnY, btnW, btnH);
-	context.fillStyle = '#FFFFFF';
+	context.fillStyle = '#baffa7';
 	context.fill();
 
 	context.lineWidth = 2;
 	context.strokeStyle = '#000000';
 	context.stroke();
 
-	context.font = '18px Kremlin Pro Web';
-	context.fillStyle = '#000000';
-	context.fillText(text, btnX + 15, btnY + 20);
+	context.font = '15px ArcadeClassic';
+	context.fillStyle = '#404040';
+	const margin = (btnW - text.length * 5 * 1.6)/2
+	context.fillText(text, btnX + margin, btnY + 21);
 }
 
 function getMousePos(canvas, event) {
@@ -33,7 +34,7 @@ function getMousePos(canvas, event) {
 }
 
 function isInside(pos, rect) {
-	return pos.x > rect.x && pos.x < rect.x + rect.width && pos.y < rect.y + rect.heigth && pos.y > rect.y
+	return pos.x > rect.x && pos.x < rect.x + rect.width && pos.y < rect.y + rect.height && pos.y > rect.y
 }
 
 function random(min, max) {
