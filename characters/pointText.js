@@ -5,6 +5,9 @@ function PointText(x, y, value) {
 	this.initialY = y;
 
 	this.timestamp = 0;
+
+	this.pointSound = AudioFX('sounds/point.mp3');
+	this.pointSound.play();
 }
 
 

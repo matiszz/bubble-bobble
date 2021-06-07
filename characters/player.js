@@ -54,6 +54,7 @@ function Player(x, y, map) {
   // Set attributes for jump
   this.bJumping = false;
   this.jumpAngle = 0;
+  this.jumpingSound = AudioFX('sounds/jump.mp3')
 
   // Attributes for shooting
   this.shootingSince = 0;
@@ -141,6 +142,9 @@ Player.prototype.update = function (deltaTime) {
     }
 
     if (this.bJumping) {
+      if (this.jumpAngle < 5)
+        this.jumpingSound.play();
+
       this.jumpAngle += 5;
       if (this.jumpAngle === 180) {
         this.bJumping = false;

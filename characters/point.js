@@ -33,11 +33,6 @@ function Point(x, y, map) {
 
 
 Point.prototype.update = function update(deltaTime) {
-	// this.sprite.y += POINT_SPEED;
-	// 	if (this.map.collisionMoveDown(this.sprite)) {
-	// 	}
-
-
 	this.sprite.update(deltaTime);
 	this.timestamp += deltaTime;
 }

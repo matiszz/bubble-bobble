@@ -64,6 +64,10 @@ function Bubble(x, y, direction, map) {
 	this.exploded = false;
 	this.explodedAt = 0;
 
+	this.shootSound = AudioFX('sounds/shoot.mp3')
+	this.releaseSound = AudioFX('sounds/release.mp3')
+	this.shootSound.play();
+
 	this.map = map;
 }
 
@@ -145,6 +149,7 @@ Bubble.prototype.captureEnemy = function (type, enemy) {
 }
 
 Bubble.prototype.releaseEnemy = function () {
+	this.releaseSound.play();
 	this.explode();
 	this.hasEnemyCaptured = false;
 	this.capturedEnemy.releaseBubble(this.sprite.x, this.sprite.y);

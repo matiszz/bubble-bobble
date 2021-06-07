@@ -8,6 +8,8 @@ const POINT_CREATION_TIME = 400;
 const BONUS_TIME = 5000;
 
 function Scene(onGameOver) {
+  this.levelSound = AudioFX('sounds/level_up.mp3');
+
   this.setLevel(level01)
 
   // Score variables
@@ -25,6 +27,9 @@ function Scene(onGameOver) {
 }
 
 Scene.prototype.update = function (deltaTime) {
+  if (this.currentTime === 0)
+    this.levelSound.play();
+
   // Keep track of time
   this.currentTime += deltaTime;
   this.player.update(deltaTime);
@@ -240,6 +245,7 @@ Scene.prototype.updateLevel = function () {
   if (this.enemies.length === 0 && this.currentTime - this.allEnemiesKilledAt > BONUS_TIME) {
     this.currentLevel++;
     this.setLevel(getLevel(this.currentLevel))
+    this.levelSound.play();
   }
 }
 

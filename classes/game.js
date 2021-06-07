@@ -18,7 +18,7 @@ let sceneMain = new Scene(onNavToGameOver);
 let previousTimestamp;
 let keyboard = [];
 let interacted;
-let currentScene = SCENE_PLAY;
+let currentScene = SCENE_MENU;
 
 
 // Control keyboard events
