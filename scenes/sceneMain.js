@@ -65,6 +65,9 @@ Scene.prototype.draw = function () {
   for (let point of this.points)
     point.draw();
 
+  for (let pointText of this.pointTexts)
+    pointText.draw();
+
   this.player.draw();
 }
 
@@ -135,8 +138,9 @@ Scene.prototype.createEnemies = function () {
 
 }
 
-Scene.prototype.addScore = function (points) {
-  this.score += points;
+Scene.prototype.addScore = function (point) {
+  this.score += point.pointScore;
+  this.pointTexts.push(new PointText(point.sprite.x, point.sprite.y, point.pointScore))
   if (this.score > this.highScore) {
     this.highScore = this.score;
     localStorage.setItem('highScore', this.highScore);
@@ -175,11 +179,14 @@ Scene.prototype.drawTexts = function () {
 }
 
 Scene.prototype.updatePoints = function (deltaTime) {
+  for (let pointText of this.pointTexts)
+    pointText.update(deltaTime);
+
   for (let point of this.points) {
     point.update(deltaTime);
 
     if (this.player.collisionBox().intersect(point.collisionBox()) && this.didEnoughTimePassedPoint()) {
-      this.addScore(point.pointScore);
+      this.addScore(point);
       this.points = this.points.filter(el => el !== point);
     }
   }
@@ -249,6 +256,7 @@ Scene.prototype.setLevel = function (level) {
   // Bubbles and points
   this.bubbles = [];
   this.points = [];
+  this.pointTexts = [];
   this.lastBubbleCreatedTime = 0;
   this.lastPointCreatedTime = 0;
 
