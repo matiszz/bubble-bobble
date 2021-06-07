@@ -1,4 +1,3 @@
-
 // Main class. Executes the game loop, redrawing the scene as needed.
 
 const FRAME_RATE = 60;
@@ -12,11 +11,12 @@ const SCENE_PLAY = 'SCENE_PLAY';
 const sceneMain = new Scene();
 const sceneCredits = new SceneCredits();
 const sceneMenu = new SceneMenu();
+const sceneInstructions = new SceneInstructions();
 
 let previousTimestamp;
 let keyboard = [];
 let interacted;
-let currentScene = SCENE_CREDITS;
+let currentScene = SCENE_INSTRUCTIONS;
 
 
 // Control keyboard events
@@ -81,7 +81,7 @@ function drawCurrentScene(deltaTime, timestamp) {
 	} else if (currentScene === SCENE_INSTRUCTIONS) {
 		sceneMain.update(deltaTime);
 		previousTimestamp = timestamp;
-		sceneMain.draw();
+		sceneInstructions.draw(onNavToMenu);
 	} else if (currentScene === SCENE_PLAY) {
 		sceneMain.update(deltaTime);
 		previousTimestamp = timestamp;
