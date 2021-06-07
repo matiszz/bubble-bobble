@@ -2,6 +2,7 @@
 const BUBBLE_EMPTY = 0;
 const BUBBLE_FULL_INVADER = 1;
 const BUBBLE_FULL_ENEMY = 2;
+const BUBBLE_EXPLODED = 3;
 
 const DIRECTION_LEFT = 0;
 const DIRECTION_RIGHT = 1;
@@ -15,6 +16,7 @@ const FLOATING_DOWN = 3;
 
 const IMPULSE_TIME = 600;
 const FLOATING_TIME = 1000;
+const EXPLODING_TIME = 200;
 
 const IMPULSE_SPEED = 10;
 const FLOATING_SPEED = 1;
@@ -45,6 +47,9 @@ function Bubble(x, y, direction, map) {
 	this.sprite.addKeyframe(BUBBLE_FULL_ENEMY, [32, 32, 16, 16]);
 	this.sprite.addKeyframe(BUBBLE_FULL_ENEMY, [48, 32, 16, 16]);
 
+	this.sprite.addAnimation();
+	this.sprite.addKeyframe(BUBBLE_EXPLODED, [0, 48, 16, 16]);
+
 	this.sprite.setAnimation(BUBBLE_EMPTY);
 
 	this.impulseDirection = direction;
@@ -56,6 +61,8 @@ function Bubble(x, y, direction, map) {
 
 	// For capture
 	this.hasEnemyCaptured = false;
+	this.exploded = false;
+	this.explodedAt = 0;
 
 	this.map = map;
 }
@@ -63,6 +70,9 @@ function Bubble(x, y, direction, map) {
 Bubble.prototype.update = function update(deltaTime) {
 	this.sprite.update(deltaTime);
 	this.timestamp += deltaTime;
+
+	if (this.timestamp - this.explodedAt >= EXPLODING_TIME && this.explodedAt !== 0)
+		this.exploded = true;
 
 	if (this.timestamp - this.capturedAt >= CAPTURE_TIME && this.hasEnemyCaptured)
 		this.releaseEnemy();
@@ -135,7 +145,15 @@ Bubble.prototype.captureEnemy = function (type, enemy) {
 }
 
 Bubble.prototype.releaseEnemy = function () {
-	console.log('Releasing enemy')
+	this.explode();
 	this.hasEnemyCaptured = false;
 	this.capturedEnemy.releaseBubble(this.sprite.x, this.sprite.y);
+	this.capturedEnemy = null;
+}
+
+Bubble.prototype.explode = function () {
+
+	console.log('Exploding')
+	this.explodedAt = this.timestamp;
+	this.sprite.setAnimation(BUBBLE_EXPLODED)
 }

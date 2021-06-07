@@ -194,10 +194,8 @@ Scene.prototype.updatePoints = function (deltaTime) {
 
 Scene.prototype.updateBubbles = function (deltaTime) {
   for (let bubble of this.bubbles) {
-    bubble.update(deltaTime);
-
     // Check for collision between entities
-    if (this.player.collisionBox().intersect(bubble.collisionBox()) && this.didEnoughTimePassedBubble()) {
+    if (this.player.collisionBox().intersect(bubble.collisionBox()) && this.didEnoughTimePassedBubble() && !bubble.exploded && bubble.explodedAt === 0) {
       if (bubble.hasEnemyCaptured) {
         this.points.push(new Point(bubble.sprite.x, bubble.sprite.y, this.map))
         this.lastPointCreatedTime = this.currentTime;
@@ -205,10 +203,13 @@ Scene.prototype.updateBubbles = function (deltaTime) {
         // Remove enemy form game
         this.enemies = this.enemies.filter(el => el !== bubble.capturedEnemy);
       }
-
-      this.bubbles = this.bubbles.filter(el => el !== bubble);
+      bubble.explode();
     }
+
+    bubble.update(deltaTime);
   }
+
+  this.bubbles = this.bubbles.filter(bubble => !bubble.exploded);
 }
 
 Scene.prototype.updateEnemies = function (deltaTime) {
@@ -221,7 +222,8 @@ Scene.prototype.updateEnemies = function (deltaTime) {
 
     // Check collisions enemies and bubbles
     for (let bubble of this.bubbles) {
-      if (enemy.collisionBox().intersect(bubble.collisionBox()) && !enemy.isCaptured && !bubble.hasEnemyCaptured) {
+      if (enemy.collisionBox().intersect(bubble.collisionBox()) && !enemy.isCaptured && !bubble.hasEnemyCaptured && !bubble.exploded && bubble.explodedAt === 0) {
+        console.log('Capturing enemy')
         bubble.captureEnemy(enemy.getType(), enemy);
         enemy.capture();
       }

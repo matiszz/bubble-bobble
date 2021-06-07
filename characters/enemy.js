@@ -132,10 +132,8 @@ Enemy.prototype.capture = function () {
 
 // TODO: ASK PROFESSOR!
 Enemy.prototype.releaseBubble = function (x, y) {
-  // console.log('RELEASING at ', x, y)
+  console.log('RELEASING at ', x, y)
   this.isCaptured = false;
   this.sprite.x = x;
   this.sprite.y = y;
-
-  return 0;
 }
