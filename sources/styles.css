@@ -2,3 +2,18 @@
     font-family: 'ArcadeClassic';
     src: url('./arcade.ttf');
 }
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+body {
+    background-color: #b8b8b8;
+}
+
+h1 {
+    font-family: 'ArcadeClassic', serif;
+    text-align: center;
+}
