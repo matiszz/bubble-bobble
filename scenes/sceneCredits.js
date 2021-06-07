@@ -18,8 +18,8 @@ SceneCredits.prototype.update = function (deltaTime) {
 
 SceneCredits.prototype.draw = function (onClick) {
 	// Get canvas object, then its context
-	var canvas = document.getElementById("game-layer");
-	var context = canvas.getContext("2d");
+	const canvas = document.getElementById("game-layer");
+	const context = canvas.getContext("2d");
 
 	// Clear background
 	context.fillStyle = "#334433";

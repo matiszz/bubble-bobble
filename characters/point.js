@@ -7,7 +7,6 @@ const BEER = 3;
 const POINT_SPEED = 3;
 
 function Point(x, y, map) {
-	console.log('hola')
 	const bubble = new Texture("imgs/points.png");
 
 	// Prepare bubble sprite & its animation
@@ -25,7 +24,9 @@ function Point(x, y, map) {
 	this.sprite.addAnimation();
 	this.sprite.addKeyframe(BEER, [16, 16, 16, 16]);
 
-	this.sprite.setAnimation(BUBBLE_EMPTY);
+	const animation = random(0, 3);
+	this.sprite.setAnimation(animation);
+	this.pointScore = [570, 190, 340, 470][animation];
 
 	this.map = map;
 }

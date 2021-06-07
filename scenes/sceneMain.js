@@ -6,14 +6,16 @@ const POINT_CREATION_TIME = 800;
 function Scene(level) {
   // Loading texture to use in a TileMap
   const tilesheet = new Texture("imgs/tiles.png");
-
   this.currentLevel = level;
+
   // Create tilemap
   this.map = new Tilemap(tilesheet, [16, 16], [2, 2], [0, 32], level);
 
+  // Characters
   this.player = new Player(224, 240, this.map);
   this.enemies = this.createEnemies();
 
+  // Bubbles and points
   this.bubbles = [];
   this.points = [];
   this.lastBubbleCreatedTime = 0;
@@ -22,6 +24,10 @@ function Scene(level) {
   // Store current time
   this.currentTime = 0;
 
+  // Score variables
+  this.score = 0;
+  const highScore = localStorage.getItem('highScore');
+  this.highScore = highScore ? highScore : 0;
 }
 
 Scene.prototype.update = function (deltaTime) {
@@ -40,6 +46,7 @@ Scene.prototype.update = function (deltaTime) {
     point.update(deltaTime);
 
     if (this.player.collisionBox().intersect(point.collisionBox()) && this.didEnoughTimePassedPoint()) {
+      this.addScore(point.pointScore);
       this.points = this.points.filter(el => el !== point);
     }
   }
@@ -87,6 +94,7 @@ Scene.prototype.draw = function () {
 
   // Draw tilemap
   this.map.draw();
+  this.drawTexts();
 
   for (let bubble of this.bubbles)
     bubble.draw();
@@ -163,4 +171,33 @@ Scene.prototype.createEnemies = function () {
 
   }
 
+}
+
+Scene.prototype.addScore = function (points) {
+  this.score += points;
+  if (this.score > this.highScore) {
+    this.highScore = this.score;
+    localStorage.setItem('highScore', this.highScore);
+  }
+}
+
+Scene.prototype.drawTexts = function () {
+  // Get canvas object, then its context
+  const canvas = document.getElementById("game-layer");
+  const context = canvas.getContext("2d");
+
+  context.font = "20px ArcadeClassic";
+  context.fillStyle = "#2dff00";
+  context.fillText("Score", 40, 15);
+  context.fillStyle = "White";
+  context.fillText(this.score, 40, 30);
+
+  context.fillStyle = "#0037ff";
+  context.fillText("High Score", 200, 15);
+  context.fillStyle = "White";
+  context.fillText(this.highScore, 200, 30);
+
+  context.fillStyle = "#00ffff";
+  context.fillText("Insert", 412, 15);
+  context.fillText("Coin", 430, 30);
 }
