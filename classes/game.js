@@ -9,7 +9,7 @@ const SCENE_MENU = 'SCENE_MENU';
 const SCENE_INSTRUCTIONS = 'SCENE_INSTRUCTIONS';
 const SCENE_PLAY = 'SCENE_PLAY';
 
-const sceneMain = new Scene(level01);
+const sceneMain = new Scene();
 const sceneCredits = new SceneCredits();
 const sceneMenu = new SceneMenu();
 

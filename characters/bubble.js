@@ -60,7 +60,6 @@ function Bubble(x, y, direction, map) {
 	this.map = map;
 }
 
-
 Bubble.prototype.update = function update(deltaTime) {
 	this.sprite.update(deltaTime);
 	this.timestamp += deltaTime;
@@ -125,7 +124,7 @@ Bubble.prototype.moveDown = function (speed) {
 }
 
 Bubble.prototype.captureEnemy = function (type, enemy) {
-	this.onReleaseEnemy = enemy.releaseBubble;
+	this.capturedEnemy = enemy;
 	this.capturedAt = this.timestamp;
 	this.hasEnemyCaptured = true;
 
@@ -136,6 +135,7 @@ Bubble.prototype.captureEnemy = function (type, enemy) {
 }
 
 Bubble.prototype.releaseEnemy = function () {
+	console.log('Releasing enemy')
 	this.hasEnemyCaptured = false;
-	this.onReleaseEnemy(this.sprite.x, this.sprite.y);
+	this.capturedEnemy.releaseBubble(this.sprite.x, this.sprite.y);
 }

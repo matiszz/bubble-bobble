@@ -1,85 +1,41 @@
-const BUBBLE_CREATION_TIME = 300;
-const POINT_CREATION_TIME = 800;
-
 // Scene. Updates and draws a single scene of the game.
 
-function Scene(level) {
-  // Loading texture to use in a TileMap
-  const tilesheet = new Texture("imgs/tiles.png");
-  this.currentLevel = level;
+// Time to pass between bubbles creation
+const BUBBLE_CREATION_TIME = 300;
+// Time to pass between creation of point and pick up
+const POINT_CREATION_TIME = 400;
+// Time after all enemies are dead to pick up all points
+const BONUS_TIME = 5000;
 
-  // Create tilemap
-  this.map = new Tilemap(tilesheet, [16, 16], [2, 2], [0, 32], level);
-
-  // Characters
-  this.player = new Player(224, 240, this.map);
-  this.enemies = this.createEnemies();
-
-  // Bubbles and points
-  this.bubbles = [];
-  this.points = [];
-  this.lastBubbleCreatedTime = 0;
-  this.lastPointCreatedTime = 0;
-
-  // Store current time
-  this.currentTime = 0;
+function Scene() {
+  this.setLevel(level01)
 
   // Score variables
-  this.score = 0;
   const highScore = localStorage.getItem('highScore');
   this.highScore = highScore ? highScore : 0;
+  this.score = 0;
+  this.allEnemiesKilledAt = 0;
+
+  this.currentLevel = 1;
 }
 
 Scene.prototype.update = function (deltaTime) {
   // Keep track of time
   this.currentTime += deltaTime;
-
   this.player.update(deltaTime);
 
-  // SPACE
+  // SPACE KEY
   if (keyboard[32] && this.didEnoughTimePassedBubble()) {
     this.lastBubbleCreatedTime = this.currentTime;
     this.bubbles.push(new Bubble(this.player.sprite.x, this.player.sprite.y, this.shotDirection(), this.map));
   }
 
-  for (let point of this.points) {
-    point.update(deltaTime);
+  // Updates
+  this.updatePoints(deltaTime);
+  this.updateBubbles(deltaTime);
+  this.updateEnemies(deltaTime);
 
-    if (this.player.collisionBox().intersect(point.collisionBox()) && this.didEnoughTimePassedPoint()) {
-      this.addScore(point.pointScore);
-      this.points = this.points.filter(el => el !== point);
-    }
-  }
-
-  for (let bubble of this.bubbles) {
-    bubble.update(deltaTime);
-
-    // Check for collision between entities
-    if (this.player.collisionBox().intersect(bubble.collisionBox()) && this.didEnoughTimePassedBubble()) {
-      if (bubble.hasEnemyCaptured) {
-        this.points.push(new Point(bubble.sprite.x, bubble.sprite.y, this.map))
-        this.lastPointCreatedTime = this.currentTime;
-      }
-
-      this.bubbles = this.bubbles.filter(el => el !== bubble);
-    }
-  }
-
-  for (let enemy of this.enemies) {
-    enemy.update(deltaTime);
-
-    // Check for collision with enemy
-    if (this.player.collisionBox().intersect(enemy.collisionBox()) && !enemy.isCaptured)
-      this.player.die();
-
-    // Check collisions enemies and bubbles
-    for (let bubble of this.bubbles) {
-      if (enemy.collisionBox().intersect(bubble.collisionBox()) && !enemy.isCaptured && !bubble.hasEnemyCaptured) {
-        bubble.captureEnemy(enemy.getType(), enemy);
-        enemy.capture();
-      }
-    }
-  }
+  this.updateLevel();
 
 }
 
@@ -98,8 +54,10 @@ Scene.prototype.draw = function () {
 
   for (let bubble of this.bubbles)
     bubble.draw();
+
   for (let enemy of this.enemies)
     enemy.draw();
+
   for (let point of this.points)
     point.draw();
 
@@ -192,12 +150,103 @@ Scene.prototype.drawTexts = function () {
   context.fillStyle = "White";
   context.fillText(this.score, 40, 30);
 
-  context.fillStyle = "#0037ff";
+  context.fillStyle = "#c90000";
   context.fillText("High Score", 200, 15);
   context.fillStyle = "White";
   context.fillText(this.highScore, 200, 30);
 
-  context.fillStyle = "#00ffff";
-  context.fillText("Insert", 412, 15);
-  context.fillText("Coin", 430, 30);
+  if (this.allEnemiesKilled) {
+    context.fillStyle = "#d000ff";
+    context.fillText("Level up in", 390, 15);
+    context.fillText("5 seconds!", 390, 30);
+  } else {
+    context.fillStyle = "#00ffff";
+    context.fillText("Insert", 412, 15);
+    context.fillText("Coin", 430, 30);
+  }
+}
+
+Scene.prototype.updatePoints = function (deltaTime) {
+  for (let point of this.points) {
+    point.update(deltaTime);
+
+    if (this.player.collisionBox().intersect(point.collisionBox()) && this.didEnoughTimePassedPoint()) {
+      this.addScore(point.pointScore);
+      this.points = this.points.filter(el => el !== point);
+    }
+  }
+}
+
+Scene.prototype.updateBubbles = function (deltaTime) {
+  for (let bubble of this.bubbles) {
+    bubble.update(deltaTime);
+
+    // Check for collision between entities
+    if (this.player.collisionBox().intersect(bubble.collisionBox()) && this.didEnoughTimePassedBubble()) {
+      if (bubble.hasEnemyCaptured) {
+        this.points.push(new Point(bubble.sprite.x, bubble.sprite.y, this.map))
+        this.lastPointCreatedTime = this.currentTime;
+
+        // Remove enemy form game
+        this.enemies = this.enemies.filter(el => el !== bubble.capturedEnemy);
+      }
+
+      this.bubbles = this.bubbles.filter(el => el !== bubble);
+    }
+  }
+}
+
+Scene.prototype.updateEnemies = function (deltaTime) {
+  for (let enemy of this.enemies) {
+    enemy.update(deltaTime);
+
+    // Check for collision with enemy
+    if (this.player.collisionBox().intersect(enemy.collisionBox()) && !enemy.isCaptured)
+      this.player.die();
+
+    // Check collisions enemies and bubbles
+    for (let bubble of this.bubbles) {
+      if (enemy.collisionBox().intersect(bubble.collisionBox()) && !enemy.isCaptured && !bubble.hasEnemyCaptured) {
+        bubble.captureEnemy(enemy.getType(), enemy);
+        enemy.capture();
+      }
+    }
+  }
+
+  if (this.enemies.length === 0 && !this.allEnemiesKilled) {
+    this.allEnemiesKilledAt = this.currentTime;
+    this.allEnemiesKilled = true;
+  }
+}
+
+Scene.prototype.updateLevel = function () {
+  if (this.enemies.length === 0 && this.currentTime - this.allEnemiesKilledAt > BONUS_TIME) {
+    this.currentLevel++;
+    this.setLevel(getLevel(this.currentLevel))
+  }
+}
+
+Scene.prototype.setLevel = function (level) {
+  // Loading texture to use in a TileMap
+  const tilesheet = new Texture("imgs/tiles.png");
+  this.currentLevel = level;
+
+  // Create tilemap
+  this.map = new Tilemap(tilesheet, [16, 16], [2, 2], [0, 32], level);
+
+  // Characters
+  this.player = new Player(224, 240, this.map);
+  this.enemies = this.createEnemies();
+
+  // Bubbles and points
+  this.bubbles = [];
+  this.points = [];
+  this.lastBubbleCreatedTime = 0;
+  this.lastPointCreatedTime = 0;
+
+  // Store current time
+  this.currentTime = 0;
+
+  // Level manage
+  this.allEnemiesKilled = false;
 }

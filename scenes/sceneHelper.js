@@ -42,3 +42,18 @@ function random(min, max) {
 function randomFloat(min, max) {
 	return Math.random() * max + min;
 }
+
+function getLevel(number) {
+	switch (number) {
+		case 1:
+			return level01;
+		case 2:
+			return level02;
+		case 3:
+			return level03;
+		case 4:
+			return level04;
+		case 5:
+			return level05;
+	}
+}
