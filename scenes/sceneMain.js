@@ -16,7 +16,11 @@ function Scene() {
   this.score = 0;
   this.allEnemiesKilledAt = 0;
 
+  // Level
   this.currentLevel = 1;
+
+  // Master mode
+  this.masterModeActivated = false;
 }
 
 Scene.prototype.update = function (deltaTime) {
@@ -36,7 +40,7 @@ Scene.prototype.update = function (deltaTime) {
   this.updateEnemies(deltaTime);
 
   this.updateLevel();
-
+  this.masterController();
 }
 
 Scene.prototype.draw = function () {
@@ -84,9 +88,9 @@ Scene.prototype.createEnemies = function () {
     case level01:
       return [
         new Enemy(150, 153, this.map, 'INVADER'),
-        // new Enemy(370, 153, this.map, 'INVADER'),
-        // new Enemy(370, 330, this.map, 'MONSTER'),
-        // new Enemy(150, 330, this.map, 'MONSTER')
+        new Enemy(370, 153, this.map, 'INVADER'),
+        new Enemy(370, 330, this.map, 'MONSTER'),
+        new Enemy(150, 330, this.map, 'MONSTER')
       ]
     case level02:
       return [
@@ -159,6 +163,10 @@ Scene.prototype.drawTexts = function () {
     context.fillStyle = "#d000ff";
     context.fillText("Level up in", 390, 15);
     context.fillText("5 seconds!", 390, 30);
+  } else if (this.masterModeActivated) {
+    context.fillStyle = "#00ffff";
+    context.fillText("Master mode", 390, 15);
+    context.fillText("Activated", 400, 30);
   } else {
     context.fillStyle = "#00ffff";
     context.fillText("Insert", 412, 15);
@@ -201,7 +209,7 @@ Scene.prototype.updateEnemies = function (deltaTime) {
     enemy.update(deltaTime);
 
     // Check for collision with enemy
-    if (this.player.collisionBox().intersect(enemy.collisionBox()) && !enemy.isCaptured)
+    if (this.player.collisionBox().intersect(enemy.collisionBox()) && !enemy.isCaptured && !this.masterModeActivated)
       this.player.die();
 
     // Check collisions enemies and bubbles
@@ -249,4 +257,19 @@ Scene.prototype.setLevel = function (level) {
 
   // Level manage
   this.allEnemiesKilled = false;
+}
+
+Scene.prototype.masterController = function () {
+  if (keyboard[71]) // G key pressed
+    this.masterModeActivated = true;
+  else if (keyboard[49] && this.masterModeActivated) // Key 1 pressed
+    this.setLevel(getLevel(1));
+  else if (keyboard[50] && this.masterModeActivated) // Key 2 pressed
+    this.setLevel(getLevel(2));
+  else if (keyboard[51] && this.masterModeActivated) // Key 3 pressed
+    this.setLevel(getLevel(3));
+  else if (keyboard[52] && this.masterModeActivated) // Key 4 pressed
+    this.setLevel(getLevel(4));
+  else if (keyboard[53] && this.masterModeActivated) // Key 5 pressed
+    this.setLevel(getLevel(5));
 }
