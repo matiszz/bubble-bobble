@@ -7,11 +7,13 @@ const SCENE_CREDITS = 'SCENE_CREDITS';
 const SCENE_MENU = 'SCENE_MENU';
 const SCENE_INSTRUCTIONS = 'SCENE_INSTRUCTIONS';
 const SCENE_PLAY = 'SCENE_PLAY';
+const GAME_OVER = 'GAME_OVER';
 
-const sceneMain = new Scene();
 const sceneCredits = new SceneCredits();
 const sceneMenu = new SceneMenu();
 const sceneInstructions = new SceneInstructions();
+const sceneGameOver = new SceneGameOver();
+let sceneMain = new Scene(onNavToGameOver);
 
 let previousTimestamp;
 let keyboard = [];
@@ -67,6 +69,11 @@ function onNavToPlay () {
 function onNavToCredits () {
 	currentScene = SCENE_CREDITS;
 }
+function onNavToGameOver (score) {
+	currentScene = GAME_OVER;
+	sessionStorage.setItem('score', score);
+	sceneMain = new Scene(onNavToGameOver);
+}
 
 function drawCurrentScene(deltaTime, timestamp) {
 	if (currentScene === SCENE_CREDITS) {
@@ -78,13 +85,17 @@ function drawCurrentScene(deltaTime, timestamp) {
 		previousTimestamp = timestamp;
 		sceneMenu.draw(onNavToPlay, onNavToCredits, onNavToInstructions);
 	} else if (currentScene === SCENE_INSTRUCTIONS) {
-		sceneMain.update(deltaTime);
+		sceneInstructions.update(deltaTime);
 		previousTimestamp = timestamp;
 		sceneInstructions.draw(onNavToMenu);
 	} else if (currentScene === SCENE_PLAY) {
 		sceneMain.update(deltaTime);
 		previousTimestamp = timestamp;
-		sceneMain.draw();
+		sceneMain.draw(onNavToGameOver);
+	} else if (currentScene === GAME_OVER) {
+		sceneGameOver.update(deltaTime, onNavToPlay);
+		previousTimestamp = timestamp;
+		sceneGameOver.draw(onNavToPlay, onNavToMenu, sessionStorage.getItem('score'));
 	}
 }
 // Init and launch game loop

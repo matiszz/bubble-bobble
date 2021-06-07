@@ -7,7 +7,7 @@ const POINT_CREATION_TIME = 400;
 // Time after all enemies are dead to pick up all points
 const BONUS_TIME = 5000;
 
-function Scene() {
+function Scene(onGameOver) {
   this.setLevel(level01)
 
   // Score variables
@@ -18,6 +18,7 @@ function Scene() {
 
   // Level
   this.currentLevel = 1;
+  this.onGameOver = onGameOver;
 
   // Master mode
   this.masterModeActivated = false;
@@ -218,7 +219,7 @@ Scene.prototype.updateEnemies = function (deltaTime) {
 
     // Check for collision with enemy
     if (this.player.collisionBox().intersect(enemy.collisionBox()) && !enemy.isCaptured && !this.masterModeActivated)
-      this.player.die();
+      this.player.die(() => this.onGameOver(this.score));
 
     // Check collisions enemies and bubbles
     for (let bubble of this.bubbles) {

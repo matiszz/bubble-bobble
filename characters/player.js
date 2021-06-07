@@ -77,8 +77,10 @@ Player.prototype.update = function (deltaTime) {
       this.sprite.setAnimation(BUB_STAND_RIGHT)
       this.sprite.y = this.startY + 96 + (this.jumpAngle-230) * 0.7;
 
-      if (this.sprite.y > 448)
+      if (this.sprite.y > 448) {
         this.dying = false;
+        this.onGameOver();
+      }
     } else { // Jump
       this.sprite.y = this.startY - 96 * sinus;
     }
@@ -177,7 +179,8 @@ Player.prototype.collisionBox = function () {
   return new Box(this.sprite.x + 2, this.sprite.y, this.sprite.x + this.sprite.width - 4, this.sprite.y + this.sprite.height);
 }
 
-Player.prototype.die = function () {
+Player.prototype.die = function (onGameOver) {
+  this.onGameOver = onGameOver;
   this.startY = this.sprite.y;
   this.dying = true;
   this.sprite.setAnimation(BUB_DYING);
