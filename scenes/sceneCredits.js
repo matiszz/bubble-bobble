@@ -1,7 +1,7 @@
 // Scene. Updates and draws a single scene of the game.
 
-function SceneCredits() {
-
+function SceneCredits(onClick, isSceneCredits) {
+	this.backButtonDraw = drawButton(30, 30, 70, 30, "Back", onClick, isSceneCredits);
 	// Store current time
 	this.currentTime = 0
 }
@@ -12,7 +12,7 @@ SceneCredits.prototype.update = function (deltaTime) {
 	this.currentTime += deltaTime;
 }
 
-SceneCredits.prototype.draw = function (onClick) {
+SceneCredits.prototype.draw = function () {
 	// Get canvas object, then its context
 	const canvas = document.getElementById("game-layer");
 	const context = canvas.getContext("2d");
@@ -40,5 +40,5 @@ SceneCredits.prototype.draw = function (onClick) {
 	context.fillText("Universitat  Politecnica  de  Catalunya", 30, 350);
 	context.fillText("June 2021", 200, 380);
 
-	drawButton(30, 30, 70, 30, "Back", onClick);
+	this.backButtonDraw();
 }

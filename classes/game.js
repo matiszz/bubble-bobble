@@ -9,10 +9,10 @@ const SCENE_INSTRUCTIONS = 'SCENE_INSTRUCTIONS';
 const SCENE_PLAY = 'SCENE_PLAY';
 const GAME_OVER = 'GAME_OVER';
 
-const sceneCredits = new SceneCredits();
-const sceneMenu = new SceneMenu();
-const sceneInstructions = new SceneInstructions();
-const sceneGameOver = new SceneGameOver();
+const sceneCredits = new SceneCredits(onNavToMenu, isSceneCredits);
+const sceneMenu = new SceneMenu(onNavToPlay, onNavToCredits, onNavToInstructions, isSceneMenu);
+const sceneInstructions = new SceneInstructions(onNavToMenu, isSceneInstructions);
+const sceneGameOver = new SceneGameOver(onNavToPlay, onNavToMenu, isSceneGameOver);
 let sceneMain = new Scene(onNavToGameOver);
 
 let previousTimestamp;
@@ -75,19 +75,33 @@ function onNavToGameOver (score) {
 	sceneMain = new Scene(onNavToGameOver);
 }
 
+// Functions to check scenes
+function isSceneMenu () {
+	return currentScene === SCENE_MENU;
+}
+function isSceneInstructions () {
+	return currentScene === SCENE_INSTRUCTIONS;
+}
+function isSceneGameOver () {
+	return currentScene === GAME_OVER;
+}
+function isSceneCredits () {
+	return currentScene === SCENE_CREDITS;
+}
+
 function drawCurrentScene(deltaTime, timestamp) {
 	if (currentScene === SCENE_CREDITS) {
 		sceneCredits.update(deltaTime);
 		previousTimestamp = timestamp;
-		sceneCredits.draw(onNavToMenu);
+		sceneCredits.draw();
 	} else if (currentScene === SCENE_MENU) {
 		sceneMenu.update(deltaTime);
 		previousTimestamp = timestamp;
-		sceneMenu.draw(onNavToPlay, onNavToCredits, onNavToInstructions);
+		sceneMenu.draw();
 	} else if (currentScene === SCENE_INSTRUCTIONS) {
 		sceneInstructions.update(deltaTime);
 		previousTimestamp = timestamp;
-		sceneInstructions.draw(onNavToMenu);
+		sceneInstructions.draw();
 	} else if (currentScene === SCENE_PLAY) {
 		sceneMain.update(deltaTime);
 		previousTimestamp = timestamp;
@@ -95,7 +109,7 @@ function drawCurrentScene(deltaTime, timestamp) {
 	} else if (currentScene === GAME_OVER) {
 		sceneGameOver.update(deltaTime, onNavToPlay);
 		previousTimestamp = timestamp;
-		sceneGameOver.draw(onNavToPlay, onNavToMenu, sessionStorage.getItem('score'));
+		sceneGameOver.draw(sessionStorage.getItem('score'));
 	}
 }
 // Init and launch game loop

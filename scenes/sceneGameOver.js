@@ -1,6 +1,9 @@
 // Scene. Updates and draws a single scene of the game.
 
-function SceneGameOver() {
+function SceneGameOver(onNavToPlay, onNavToMenu, isSceneGameOver) {
+  this.playButtonDraw = drawButton(120, 350, 110, 30, "Play again", onNavToPlay, isSceneGameOver);
+  this.menuButtonDraw = drawButton(280, 350, 110, 30, "Main menu", onNavToMenu, isSceneGameOver);
+
   // Store current time
   this.currentTime = 0
   this.sound = AudioFX('sounds/game_over.mp3')
@@ -18,7 +21,7 @@ SceneGameOver.prototype.update = function (deltaTime, onNavToPlay) {
     onNavToPlay()
 }
 
-SceneGameOver.prototype.draw = function (onNavToPlay, onNavToMenu, score) {
+SceneGameOver.prototype.draw = function (score) {
   // Get canvas object, then its context
   const canvas = document.getElementById("game-layer");
   const context = canvas.getContext("2d");
@@ -55,6 +58,6 @@ SceneGameOver.prototype.draw = function (onNavToPlay, onNavToMenu, score) {
   context.fillStyle = "White";
   context.fillText(highScore, 225, 320);
 
-  drawButton(120, 350, 110, 30, "Play again", onNavToPlay);
-  drawButton(280, 350, 110, 30, "Main menu", onNavToMenu);
+  this.playButtonDraw();
+  this.menuButtonDraw();
 }

@@ -1,6 +1,7 @@
 // Scene. Updates and draws a single scene of the game.
 
-function SceneInstructions() {
+function SceneInstructions(onClick, isSceneInstructions) {
+	this.backButtonDraw = drawButton(30, 30, 70, 30, "Back", onClick, isSceneInstructions);
 
 	// Store current time
 	this.currentTime = 0
@@ -12,7 +13,7 @@ SceneInstructions.prototype.update = function (deltaTime) {
 	this.currentTime += deltaTime;
 }
 
-SceneInstructions.prototype.draw = function (onClick) {
+SceneInstructions.prototype.draw = function () {
 	// Get canvas object, then its context
 	const canvas = document.getElementById("game-layer");
 	const context = canvas.getContext("2d");
@@ -48,5 +49,5 @@ SceneInstructions.prototype.draw = function (onClick) {
 	context.fillStyle = "#00c4ff";
 	context.fillText("Kill  all  the  enemies  and  earn  points  to  win!", 40, 400);
 
-	drawButton(30, 30, 70, 30, "Back", onClick);
+	this.backButtonDraw();
 }

@@ -1,38 +1,35 @@
-function drawButton(btnX, btnY, btnW, btnH, text, onClick) {
+function drawButton(btnX, btnY, btnW, btnH, text, onClick, sceneCondition) {
   const canvas = document.getElementById("game-layer");
-  const context = canvas.getContext("2d");
-
   const rectangle = {x: btnX, y: btnY, width: btnW, height: btnH};
   const clickSound = AudioFX('sounds/click.mp3');
 
-  // Todo: PREGUNTAR PROFE
   canvas.addEventListener('mouseup', (evt) => {
-    evt.preventDefault();
     const mousePos = getMousePos(canvas, evt);
-    let hasClicked = false;
-
-    if (isInside(mousePos, rectangle) && !hasClicked) {
-      hasClicked = true;
+    if (isInside(mousePos, rectangle) && sceneCondition()) {
       clickSound.play();
-      // console.log('play')
+      console.log('play')
       onClick();
     }
   }, false);
 
-  context.beginPath();
+  return function () {
+    const canvas = document.getElementById("game-layer");
+    const context = canvas.getContext("2d");
+    context.beginPath();
 
-  context.rect(btnX, btnY, btnW, btnH);
-  context.fillStyle = '#baffa7';
-  context.fill();
+    context.rect(btnX, btnY, btnW, btnH);
+    context.fillStyle = '#baffa7';
+    context.fill();
 
-  context.lineWidth = 2;
-  context.strokeStyle = '#000000';
-  context.stroke();
+    context.lineWidth = 2;
+    context.strokeStyle = '#000000';
+    context.stroke();
 
-  context.font = '15px ArcadeClassic';
-  context.fillStyle = '#404040';
-  const margin = (btnW - text.length * 5 * 1.6) / 2
-  context.fillText(text, btnX + margin, btnY + 21);
+    context.font = '15px ArcadeClassic';
+    context.fillStyle = '#404040';
+    const margin = (btnW - text.length * 5 * 1.6) / 2
+    context.fillText(text, btnX + margin, btnY + 21);
+  }
 }
 
 function getMousePos(canvas, event) {

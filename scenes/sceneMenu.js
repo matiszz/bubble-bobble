@@ -1,17 +1,19 @@
 // Scene. Updates and draws a single scene of the game.
 
-function SceneMenu() {
+function SceneMenu(onClickPlay, onClickCredits, onClickInstructions, isSceneMenu) {
 	// Store current time
 	this.currentTime = 0
+	this.playButtonPaint = drawButton(50, 350, 110, 30, "Play", onClickPlay, isSceneMenu);
+	this.creditsButtonPaint = drawButton(195, 350, 110, 30, "Credits", onClickCredits, isSceneMenu);
+	this.instructionsButtonPaint = drawButton(340, 350, 110, 30, "Instructions", onClickInstructions, isSceneMenu);
 }
-
 
 SceneMenu.prototype.update = function (deltaTime) {
 	// Keep track of time
 	this.currentTime += deltaTime;
 }
 
-SceneMenu.prototype.draw = function (onClickPlay, onClickCredits, onClickInstructions) {
+SceneMenu.prototype.draw = function () {
 	// Get canvas object, then its context
 	const canvas = document.getElementById("game-layer");
 	const context = canvas.getContext("2d");
@@ -41,7 +43,7 @@ SceneMenu.prototype.draw = function (onClickPlay, onClickCredits, onClickInstruc
 	context.fillStyle = "White";
 	context.fillText("Made  by  Matias  Szarfer", 120, 315);
 
-	drawButton(50, 350, 110, 30, "Play", onClickPlay);
-	drawButton(195, 350, 110, 30, "Credits", onClickCredits);
-	drawButton(340, 350, 110, 30, "Instructions", onClickInstructions);
+	this.playButtonPaint()
+	this.creditsButtonPaint()
+	this.instructionsButtonPaint()
 }

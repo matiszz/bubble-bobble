@@ -93,7 +93,6 @@ Scene.prototype.shotDirection = function () {
 }
 
 Scene.prototype.createEnemies = function () {
-  console.log(this.currentLevelNumber)
   switch (this.currentLevelNumber) {
     case 1:
       return [
@@ -142,7 +141,6 @@ Scene.prototype.createEnemies = function () {
     default:
 
   }
-
 }
 
 Scene.prototype.addScore = function (point) {
