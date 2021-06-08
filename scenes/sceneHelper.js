@@ -7,7 +7,6 @@ function drawButton(btnX, btnY, btnW, btnH, text, onClick, sceneCondition) {
     const mousePos = getMousePos(canvas, evt);
     if (isInside(mousePos, rectangle) && sceneCondition()) {
       clickSound.play();
-      console.log('play')
       onClick();
     }
   }, false);
