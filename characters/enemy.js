@@ -4,8 +4,6 @@ const ENEMY_RIGHT = 1;
 const ENEMY_DIRECTION_LEFT = 0;
 const ENEMY_DIRECTION_RIGHT = 1;
 
-const TIME_BETWEEN_ENEMY_JUMPS = random(3000, 5000)
-
 function Enemy(x, y, map, type) {
   // Loading spritesheets
   const invader = new Texture("imgs/invader.png");
@@ -38,11 +36,12 @@ function Enemy(x, y, map, type) {
   // Set attributes for jump
   this.bJumping = false;
   this.jumpAngle = 0;
-  this.jumpingThreshold = 448 / 2 + random(0, 50);
+  this.jumpingThreshold = 448 / 2 + random(0, 100);
   this.lastJumpedAt = 0;
+  this.time_between_jumps = random(3000, 5000)
 
   // Attributes for direction and speed
-  this.speed = randomFloat(2, 2.6);
+  this.speed = randomFloat(1.5, 2);
   this.direction = random(0, 1);
   if (this.direction === ENEMY_DIRECTION_LEFT)
     this.sprite.setAnimation(ENEMY_LEFT)
@@ -54,6 +53,8 @@ function Enemy(x, y, map, type) {
 
   // Timestamp
   this.timestamp = 0;
+
+  console.dir(this)
 }
 
 Enemy.prototype.update = function (deltaTime) {
@@ -119,7 +120,7 @@ Enemy.prototype.moveRight = function (speed) {
 }
 
 Enemy.prototype.isAllowedToJump = function () {
-  return (this.sprite.y > this.jumpingThreshold) && (this.timestamp - this.lastJumpedAt > TIME_BETWEEN_ENEMY_JUMPS + random(-500, 1000))
+  return (this.sprite.y > this.jumpingThreshold) && (this.timestamp - this.lastJumpedAt > this.time_between_jumps + random(-500, 1000))
 }
 
 Enemy.prototype.getType = function () {

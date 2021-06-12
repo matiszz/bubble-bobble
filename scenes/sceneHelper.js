@@ -44,11 +44,11 @@ function isInside(pos, rect) {
 }
 
 function random(min, max) {
-  return Math.floor(Math.random() * (max + 1)) + min;
+  return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
 function randomFloat(min, max) {
-  return Math.random() * max + min;
+  return Math.random() * (max - min + 1) + min - 1;
 }
 
 function getLevel(number) {
