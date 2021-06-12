@@ -7,7 +7,7 @@ const POINT_CREATION_TIME = 400;
 // Time after all enemies are dead to pick up all points
 const BONUS_TIME = 5000;
 
-function Scene(onGameOver) {
+function Scene(onGameOver, onYouWon) {
   this.levelSound = AudioFX('sounds/level_up.mp3');
   this.currentLevelNumber = 1;
 
@@ -21,6 +21,7 @@ function Scene(onGameOver) {
 
   // Level
   this.onGameOver = onGameOver;
+  this.onYouWon = onYouWon;
 
   // Master mode
   this.masterModeActivated = false;
@@ -243,6 +244,10 @@ Scene.prototype.updateEnemies = function (deltaTime) {
 Scene.prototype.updateLevel = function () {
   if (this.enemies.length === 0 && this.currentTime - this.allEnemiesKilledAt > BONUS_TIME) {
     this.currentLevelNumber += 1;
+
+    if (this.currentLevelNumber > 5)
+      this.onYouWon(this.score);
+
     this.setLevel(getLevel(this.currentLevelNumber))
     this.levelSound.play();
   }

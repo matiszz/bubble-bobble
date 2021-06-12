@@ -8,12 +8,14 @@ const SCENE_MENU = 'SCENE_MENU';
 const SCENE_INSTRUCTIONS = 'SCENE_INSTRUCTIONS';
 const SCENE_PLAY = 'SCENE_PLAY';
 const GAME_OVER = 'GAME_OVER';
+const YOU_WON = 'YOU_WON';
 
 const sceneCredits = new SceneCredits(onNavToMenu, isSceneCredits);
 const sceneMenu = new SceneMenu(onNavToPlay, onNavToCredits, onNavToInstructions, isSceneMenu);
 const sceneInstructions = new SceneInstructions(onNavToMenu, isSceneInstructions);
 const sceneGameOver = new SceneGameOver(onNavToPlay, onNavToMenu, isSceneGameOver);
-let sceneMain = new Scene(onNavToGameOver);
+const sceneWon = new SceneYouWon(onNavToPlay, onNavToMenu, isSceneYouWon);
+let sceneMain = new Scene(onNavToGameOver, onNavToYouWon);
 
 let previousTimestamp;
 let keyboard = [];
@@ -72,7 +74,12 @@ function onNavToCredits () {
 function onNavToGameOver (score) {
 	currentScene = GAME_OVER;
 	sessionStorage.setItem('score', score);
-	sceneMain = new Scene(onNavToGameOver);
+	sceneMain = new Scene(onNavToGameOver, onNavToYouWon);
+}
+function onNavToYouWon (score) {
+	currentScene = YOU_WON;
+	sessionStorage.setItem('score', score);
+	sceneMain = new Scene(onNavToGameOver, onNavToYouWon);
 }
 
 // Functions to check scenes
@@ -84,6 +91,9 @@ function isSceneInstructions () {
 }
 function isSceneGameOver () {
 	return currentScene === GAME_OVER;
+}
+function isSceneYouWon () {
+	return currentScene === YOU_WON;
 }
 function isSceneCredits () {
 	return currentScene === SCENE_CREDITS;
@@ -110,6 +120,10 @@ function drawCurrentScene(deltaTime, timestamp) {
 		sceneGameOver.update(deltaTime, onNavToPlay);
 		previousTimestamp = timestamp;
 		sceneGameOver.draw(sessionStorage.getItem('score'));
+	} else if (currentScene === YOU_WON) {
+		sceneWon.update(deltaTime, onNavToPlay);
+		previousTimestamp = timestamp;
+		sceneWon.draw(sessionStorage.getItem('score'));
 	}
 }
 // Init and launch game loop
