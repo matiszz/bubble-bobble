@@ -23,5 +23,5 @@ PointText.prototype.draw = function draw() {
 	// Draw Text
 	context.font = "15px ArcadeClassic";
 	context.fillStyle = "#14ff00";
-	context.fillText(this.value + 'px', this.x, this.y);
+	context.fillText(this.value + 'xp', this.x, this.y);
 }
