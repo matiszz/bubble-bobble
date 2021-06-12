@@ -81,6 +81,8 @@ function Bubble(x, y, direction, map) {
 
 	this.shootSound = AudioFX('sounds/shoot.mp3')
 	this.releaseSound = AudioFX('sounds/release.mp3')
+	this.captureSound = AudioFX('sounds/capture.mp3')
+	this.explodeSound = AudioFX('sounds/explode.mp3')
 	this.shootSound.play();
 
 	this.map = map;
@@ -165,6 +167,8 @@ Bubble.prototype.captureEnemy = function (type, enemy) {
 	this.capturedAt = this.timestamp;
 	this.hasEnemyCaptured = true;
 
+	this.captureSound.play();
+
 	if (type === 'INVADER')
 		this.sprite.setAnimation(BUBBLE_FULL_INVADER)
 	else
@@ -180,6 +184,7 @@ Bubble.prototype.releaseEnemy = function () {
 }
 
 Bubble.prototype.explode = function () {
+	this.explodeSound.play();
 	this.explodedAt = this.timestamp;
 	this.sprite.setAnimation(BUBBLE_EXPLODED)
 }
