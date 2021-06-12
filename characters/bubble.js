@@ -3,6 +3,8 @@ const BUBBLE_EMPTY = 0;
 const BUBBLE_FULL_INVADER = 1;
 const BUBBLE_FULL_ENEMY = 2;
 const BUBBLE_EXPLODED = 3;
+const BUBBLE_INVADER_EXPLODING = 4;
+const BUBBLE_ENEMY_EXPLODING = 5;
 
 const DIRECTION_LEFT = 0;
 const DIRECTION_RIGHT = 1;
@@ -21,13 +23,13 @@ const EXPLODING_TIME = 200;
 const IMPULSE_SPEED = 10;
 const FLOATING_SPEED = 1;
 
-const CAPTURE_TIME = 4000;
+const CAPTURE_TIME = 6000;
 
 function Bubble(x, y, direction, map) {
 	const bubble = new Texture("imgs/bubble.png");
 
 	// Prepare bubble sprite & its animation
-	this.sprite = new Sprite(x, y, 32, 32, 3, bubble);
+	this.sprite = new Sprite(x, y, 32, 32, 4, bubble);
 
 	this.sprite.addAnimation();
 	this.sprite.addKeyframe(BUBBLE_EMPTY, [0, 16, 16, 16]);
@@ -49,6 +51,19 @@ function Bubble(x, y, direction, map) {
 
 	this.sprite.addAnimation();
 	this.sprite.addKeyframe(BUBBLE_EXPLODED, [0, 48, 16, 16]);
+
+	this.sprite.addAnimation();
+	this.sprite.addKeyframe(BUBBLE_INVADER_EXPLODING, [0, 16, 16, 16]); // Empty
+	this.sprite.addKeyframe(BUBBLE_INVADER_EXPLODING, [0, 0, 16, 16]); // Invader
+	this.sprite.addKeyframe(BUBBLE_INVADER_EXPLODING, [16, 16, 16, 16]); // Empty
+	this.sprite.addKeyframe(BUBBLE_INVADER_EXPLODING, [32, 0, 16, 16]); // Invader
+
+	this.sprite.addAnimation();
+	this.sprite.addKeyframe(BUBBLE_ENEMY_EXPLODING, [0, 16, 16, 16]); // Empty
+	this.sprite.addKeyframe(BUBBLE_ENEMY_EXPLODING, [0, 32, 16, 16]); // Enemy
+	this.sprite.addKeyframe(BUBBLE_ENEMY_EXPLODING, [16, 16, 16, 16]); // Empty
+	this.sprite.addKeyframe(BUBBLE_ENEMY_EXPLODING, [32, 32, 16, 16]); // Enemy
+
 
 	this.sprite.setAnimation(BUBBLE_EMPTY);
 
@@ -80,6 +95,14 @@ Bubble.prototype.update = function update(deltaTime) {
 
 	if (this.timestamp - this.capturedAt >= CAPTURE_TIME && this.hasEnemyCaptured)
 		this.releaseEnemy();
+
+	// Change animation when it's about to release
+	if (this.timestamp - this.capturedAt >= CAPTURE_TIME - 2000 && this.hasEnemyCaptured) {
+		if (this.sprite.currentAnimation === BUBBLE_FULL_INVADER)
+			this.sprite.setAnimation(BUBBLE_INVADER_EXPLODING)
+		else if (this.sprite.currentAnimation === BUBBLE_FULL_ENEMY)
+			this.sprite.setAnimation(BUBBLE_ENEMY_EXPLODING)
+	}
 
 	if (this.timestamp >= IMPULSE_TIME)
 		this.status = STATUS_FLOATING;

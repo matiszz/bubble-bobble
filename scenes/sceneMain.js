@@ -265,6 +265,7 @@ Scene.prototype.setLevel = function (level) {
   this.pointTexts = [];
   this.lastBubbleCreatedTime = 0;
   this.lastPointCreatedTime = 0;
+  this.lastMasterModeActivatedTime = 0
 
   // Store current time
   this.currentTime = 0;
@@ -274,9 +275,10 @@ Scene.prototype.setLevel = function (level) {
 }
 
 Scene.prototype.masterController = function () {
-  if (keyboard[71]) // G key pressed
-    this.masterModeActivated = true;
-  else if (keyboard[49] && this.masterModeActivated) { // Key 1 pressed
+  if (keyboard[71] && this.currentTime - this.lastMasterModeActivatedTime > 200) { // G key pressed
+    this.masterModeActivated = !this.masterModeActivated;
+    this.lastMasterModeActivatedTime = this.currentTime
+  } else if (keyboard[49] && this.masterModeActivated) { // Key 1 pressed
     this.currentLevelNumber = 1;
     this.setLevel(getLevel(1));
   } else if (keyboard[50] && this.masterModeActivated) { // Key 2 pressed

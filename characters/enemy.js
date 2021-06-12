@@ -53,8 +53,6 @@ function Enemy(x, y, map, type) {
 
   // Timestamp
   this.timestamp = 0;
-
-  console.dir(this)
 }
 
 Enemy.prototype.update = function (deltaTime) {
@@ -77,7 +75,7 @@ Enemy.prototype.update = function (deltaTime) {
       }
     } else {
       // Move Bub so that it is affected by gravity
-      this.sprite.y += this.speed;
+      this.sprite.y += FALLING_SPEED;
       if (this.map.collisionMoveDown(this.sprite)) {
         // Check arrow up key. If pressed, jump.
         if (this.isAllowedToJump()) {

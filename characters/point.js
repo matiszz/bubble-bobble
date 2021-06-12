@@ -4,13 +4,11 @@ const FRUIT = 1;
 const DESERT = 2;
 const BEER = 3;
 
-const POINT_SPEED = 3;
-
 function Point(x, y, map) {
 	const bubble = new Texture("imgs/points.png");
 
 	// Prepare bubble sprite & its animation
-	this.sprite = new Sprite(x, y, 16, 16, 1, bubble);
+	this.sprite = new Sprite(x + 16, y + 16, 16, 16, 1, bubble);
 
 	this.sprite.addAnimation();
 	this.sprite.addKeyframe(CAKE, [0, 0, 16, 16]);

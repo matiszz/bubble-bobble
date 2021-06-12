@@ -1,3 +1,5 @@
+const FALLING_SPEED = 5;
+
 function drawButton(btnX, btnY, btnW, btnH, text, onClick, sceneCondition) {
   const canvas = document.getElementById("game-layer");
   const rectangle = {x: btnX, y: btnY, width: btnW, height: btnH};

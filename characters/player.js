@@ -150,13 +150,16 @@ Player.prototype.update = function (deltaTime) {
         this.bJumping = false;
         this.sprite.y = this.startY;
       } else {
+        if (this.sprite.y < 64)
+          this.bJumping = false;
+
         this.sprite.y = this.startY - 96 * Math.sin(3.14159 * this.jumpAngle / 180);
         if (this.jumpAngle > 90)
           this.bJumping = !this.map.collisionMoveDown(this.sprite);
       }
     } else {
       // Move Bub so that it is affected by gravity
-      this.sprite.y += PLAYER_SPEED;
+      this.sprite.y += FALLING_SPEED;
       if (this.map.collisionMoveDown(this.sprite)) {
         //this.sprite.y -= SPEED;
 
